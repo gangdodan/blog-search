@@ -1,13 +1,8 @@
 rootProject.name = 'blog'
-include 'search-core'
-include 'search-web'
-include 'search-common'
-include 'search-batch'
 include 'search-api'
-include 'search-internal-api'
-include 'search-external-api'
-include 'search-api:search-external-api'
-findProject(':search-api:search-external-api')?.name = 'search-external-api'
-include 'search-api:search-internal-api'
-findProject(':search-api:search-internal-api')?.name = 'search-internal-api'
+include 'search-core'
+include 'search-batch'
+
+//project(':search-core').dependsOn(':search-api')
+//project(':search-batch').dependsOn(':search-api')
 

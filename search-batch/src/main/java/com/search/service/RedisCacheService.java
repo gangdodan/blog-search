@@ -1,5 +1,6 @@
 package com.search.service;
 
+import com.common.constants.SearchConstants;
 import com.search.infrastructure.SearchTrendKeywordRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
