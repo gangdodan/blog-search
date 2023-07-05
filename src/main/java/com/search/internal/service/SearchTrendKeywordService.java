@@ -7,15 +7,18 @@ import com.search.search.infrastructure.SearchTrendKeywordRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import static com.search.common.exception.enums.ErrorCode.FAILED_TO_GET_TREND_KEYWORD;
 
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class SearchTrendKeywordService {
     private final SearchTrendKeywordRepository trendKeywordRepository;
     private final SearchLogRepository logRepository;
@@ -25,7 +28,7 @@ public class SearchTrendKeywordService {
             List<TrendKeyword> results = trendKeywordRepository.findTopTrendByScoreDesc(SearchConstants.RANKING_COUNT, date);
             return !results.isEmpty() ? results : logRepository.findTrendKeyword(date.atTime(LocalTime.MIDNIGHT), SearchConstants.RANKING_COUNT);
         } catch (Exception e) {
-            log.error("Failed to get trends from cache. cause by {}", e.getMessage(), e);
+            log.warn(FAILED_TO_GET_TREND_KEYWORD.getStatus() + ": " + FAILED_TO_GET_TREND_KEYWORD.getMessage());
             return logRepository.findTrendKeyword(date.atTime(LocalTime.MIDNIGHT), SearchConstants.RANKING_COUNT);
         }
     }

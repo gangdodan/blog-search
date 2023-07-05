@@ -22,27 +22,30 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.search.common.exception.enums.ErrorCode.REQUEST_CONFLICT;
+import static com.search.common.exception.enums.ErrorCode.UNABLE_TO_PROCESS;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class KakaoSearchBlogServiceImpl implements SearchOpenApiService {
-    @Value("${search.kakao.REST_API_KEY}")
+    @Value("${open.kakao.REST_API_KEY}")
     String secretKey;
 
-    @Value("${search.kakao.URL}")
+    @Value("${open.kakao.URL}")
     String url;
     private final SearchLogRepository logRepository;
     private final SearchTrendKeywordRepository trendKeywordRepository;
 
+
     @Override
-    @Transactional
     public Page<JsonNode> requestSearchResult(String keyword, String sort, int page, int size) {
         try {
             SearchLog log = saveSearchLog(keyword);
             trendKeywordRepository.updateScoreByKeyword(keyword, log.getTimestamp().toLocalDate());
-        } catch (Exception e) {
-            log.error("cause by {}",e.getMessage(),e);
-//            e.printStackTrace();
+        } catch (RuntimeException e) {
+            log.warn(UNABLE_TO_PROCESS.getStatus() + ": " + UNABLE_TO_PROCESS.getMessage());
         }
 
         RestTemplate rest = new RestTemplate();
@@ -50,16 +53,16 @@ public class KakaoSearchBlogServiceImpl implements SearchOpenApiService {
         HttpHeaders headers = buildHttpHeaders();
 
         try {
-            ResponseEntity<String> responseEntity = rest.exchange(uri.toString(), HttpMethod.GET, new HttpEntity<>(headers), String.class);
+            ResponseEntity<String> responseEntity = rest.exchange(uri, HttpMethod.GET, new HttpEntity<>(headers), String.class);
             String responseBody = responseEntity.getBody();
             return getDocumentsByPage(responseBody, page, size);
-        } catch (Exception e) {
-            log.error("cause by {}",e.getMessage(),e);
+        } catch (RuntimeException e) {
+            log.warn(REQUEST_CONFLICT.getStatus() + ": " + REQUEST_CONFLICT.getMessage());
             return null;
         }
     }
 
-    private URI buildSearchUri(String keyword, String sort, int page, int size) {
+    protected URI buildSearchUri(String keyword, String sort, int page, int size) {
         return UriComponentsBuilder.fromHttpUrl(url)
                 .queryParam("query", UriEncoder.encode(keyword))
                 .queryParam("sort", sort)
@@ -96,7 +99,7 @@ public class KakaoSearchBlogServiceImpl implements SearchOpenApiService {
 
             return new PageImpl<>(documents, PageRequest.of(page, size), totalCount);
         } catch (Exception e) {
-            log.error("cause by {}",e.getMessage(),e);
+            log.warn(UNABLE_TO_PROCESS.getStatus() + ": " + UNABLE_TO_PROCESS.getMessage());
             return null;
         }
     }
