@@ -8,9 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-/**
- * JoinPoint에서 Exception이 발생하면 AOP에서도 Exception을 Throw 해주어야 Handler에서 캐치할 수 있음
- * */
+
 @Aspect
 @Component
 @RequiredArgsConstructor
