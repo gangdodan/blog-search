@@ -1,0 +1,44 @@
+version: '3.9'
+services:
+  db:
+    container_name: h2
+    image: oscarfonts/h2:latest
+    ports:
+      - 1521:1521
+      - 8081:81
+    environment:
+      H2_OPTIONS: -ifNotExists
+    volumes:
+      - ./h2/:/opt/h2-data
+    restart: always
+  redis:
+    container_name: redis-local
+    image: redis:alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - ./data/:/data
+    networks:
+      - spring-net
+  app:
+#    image: spring-image:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+#    volumes:
+#      - ./src/main/resources/application.yml:/config/application.yml
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:h2:1521~/demo
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD:
+    depends_on:
+      - db
+      - redis
+    networks:
+      - spring-net
+
+networks:
+  spring-net:
