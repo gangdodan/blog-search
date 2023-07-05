@@ -28,7 +28,7 @@ public class SearchTrendKeywordService {
             List<TrendKeyword> results = trendKeywordRepository.findTopTrendByScoreDesc(SearchConstants.RANKING_COUNT, date);
             return !results.isEmpty() ? results : logRepository.findTrendKeyword(date.atTime(LocalTime.MIDNIGHT), SearchConstants.RANKING_COUNT);
         } catch (Exception e) {
-            log.warn(FAILED_TO_GET_TREND_KEYWORD.getStatus() + ": " + FAILED_TO_GET_TREND_KEYWORD.getMessage());
+            log.error(FAILED_TO_GET_TREND_KEYWORD.getStatus() + ": " + FAILED_TO_GET_TREND_KEYWORD.getMessage());
             return logRepository.findTrendKeyword(date.atTime(LocalTime.MIDNIGHT), SearchConstants.RANKING_COUNT);
         }
     }

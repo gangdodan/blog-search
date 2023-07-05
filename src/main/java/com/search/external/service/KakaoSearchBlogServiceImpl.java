@@ -45,7 +45,7 @@ public class KakaoSearchBlogServiceImpl implements SearchOpenApiService {
             SearchLog log = saveSearchLog(keyword);
             trendKeywordRepository.updateScoreByKeyword(keyword, log.getTimestamp().toLocalDate());
         } catch (RuntimeException e) {
-            log.warn(UNABLE_TO_PROCESS.getStatus() + ": " + UNABLE_TO_PROCESS.getMessage());
+            log.error(UNABLE_TO_PROCESS.getStatus() + ": " + UNABLE_TO_PROCESS.getMessage());
         }
 
         RestTemplate rest = new RestTemplate();
@@ -57,7 +57,7 @@ public class KakaoSearchBlogServiceImpl implements SearchOpenApiService {
             String responseBody = responseEntity.getBody();
             return getDocumentsByPage(responseBody, page, size);
         } catch (RuntimeException e) {
-            log.warn(REQUEST_CONFLICT.getStatus() + ": " + REQUEST_CONFLICT.getMessage());
+            log.error(REQUEST_CONFLICT.getStatus() + ": " + REQUEST_CONFLICT.getMessage());
             return null;
         }
     }
@@ -99,7 +99,7 @@ public class KakaoSearchBlogServiceImpl implements SearchOpenApiService {
 
             return new PageImpl<>(documents, PageRequest.of(page, size), totalCount);
         } catch (Exception e) {
-            log.warn(UNABLE_TO_PROCESS.getStatus() + ": " + UNABLE_TO_PROCESS.getMessage());
+            log.error(UNABLE_TO_PROCESS.getStatus() + ": " + UNABLE_TO_PROCESS.getMessage());
             return null;
         }
     }

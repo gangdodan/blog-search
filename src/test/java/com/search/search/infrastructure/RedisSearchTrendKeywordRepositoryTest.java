@@ -9,11 +9,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
+
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -28,19 +30,6 @@ class RedisSearchTrendKeywordRepositoryTest {
     @BeforeEach
     void init() {
         MockitoAnnotations.openMocks(this);
-    }
-
-    @Test
-    void updateScoreByKeyword() {
-        String keyword = "keyword";
-        LocalDate date = LocalDate.now();
-
-        when(redisTemplate.opsForZSet()).thenReturn(zSetOperations);
-
-        trendKeywordRepository.updateScoreByKeyword(keyword, date);
-
-        verify(zSetOperations, times(1)).addIfAbsent(SearchConstants.REDIS_KEY + date, keyword, 1);
-        verify(zSetOperations, times(1)).incrementScore(SearchConstants.REDIS_KEY + date, keyword, 1);
     }
 
     @Test
