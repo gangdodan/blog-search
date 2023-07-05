@@ -1,8 +1,2 @@
 rootProject.name = 'blog'
-include 'search-api'
-include 'search-core'
-include 'search-batch'
-
-//project(':search-core').dependsOn(':search-api')
-//project(':search-batch').dependsOn(':search-api')
 
