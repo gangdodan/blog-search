@@ -1,18 +1,14 @@
 spring:
-  profiles:
+  profile:
     active: local
-    include:
-      - core
-      - batch
   data:
     web:
       pageable:
         one-indexed-parameters: true
     redis:
-      database: 0
-      host: 127.0.0.1
+      host: localhost
       port: 6379
-      password: myPass
+      embedded: true
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -33,7 +29,7 @@ spring:
       path: /h2-console
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:~/test
+    url: jdbc:h2:~/demo
     username: sa
     password:
 
@@ -42,14 +38,15 @@ logging:
     org.springframework.web.client: debug
     org.hibernate.sql: debug
     org.hibernate.type: trace
-    org.springframework.security: debug
-
+  slack:
+    webhook-uri: WEBHOOK_URI  #수신을 원하는 uri
+  config: classpath:logback-spring.xml
 server:
   servlet:
     encoding:
       charset: UTF-8
       force: true
-search:
+open:
   kakao:
     URL: https://dapi.kakao.com/v2/search/blog
-    REST_API_KEY: 168f49791c65ed92825014082de464c4
+    REST_API_KEY: API_KEY #발급받은 키
