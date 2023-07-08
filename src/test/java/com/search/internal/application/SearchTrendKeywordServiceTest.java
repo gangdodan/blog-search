@@ -1,4 +1,4 @@
-package com.search.internal.service;
+package com.search.internal.application;
 
 import com.search.common.constants.SearchConstants;
 import com.search.search.dto.TrendKeyword;

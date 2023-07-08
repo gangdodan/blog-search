@@ -1,4 +1,4 @@
-package com.search.common.exception.controller;
+package com.search.common.exception.api;
 
 import com.search.common.exception.domain.CustomException;
 import com.search.common.exception.dto.ErrorResponseEntity;

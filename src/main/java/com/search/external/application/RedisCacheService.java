@@ -1,4 +1,4 @@
-package com.search.external.service;
+package com.search.external.application;
 
 import com.search.common.constants.SearchConstants;
 import com.search.search.infrastructure.SearchTrendKeywordRepository;

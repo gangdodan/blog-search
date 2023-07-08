@@ -1,4 +1,4 @@
-package com.search.external.service;
+package com.search.external.application;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.search.search.domain.SearchLog;

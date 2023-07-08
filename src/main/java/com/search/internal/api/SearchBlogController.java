@@ -1,9 +1,9 @@
-package com.search.internal.controller;
+package com.search.internal.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.search.common.dto.PageResponseDto;
-import com.search.external.service.SearchOpenApiService;
-import com.search.internal.service.SearchTrendKeywordService;
+import com.search.external.application.SearchOpenApiService;
+import com.search.internal.application.SearchTrendKeywordService;
 import com.search.search.dto.TrendKeyword;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

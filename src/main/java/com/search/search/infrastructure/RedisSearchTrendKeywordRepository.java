@@ -32,7 +32,6 @@ public class RedisSearchTrendKeywordRepository implements SearchTrendKeywordRepo
         if (Objects.isNull(tuples)) {
             return Collections.emptyList();
         }
-
         return tuples.stream()
                 .map(tuple -> TrendKeyword.of(tuple.getValue(), tuple.getScore().longValue()))
                 .collect(Collectors.toList());

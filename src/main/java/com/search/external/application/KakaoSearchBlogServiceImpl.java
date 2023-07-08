@@ -1,8 +1,10 @@
-package com.search.external.service;
+package com.search.external.application;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.search.internal.application.SearchEventPublisher;
 import com.search.search.domain.SearchLog;
+import com.search.search.event.SearchEvent;
 import com.search.search.infrastructure.SearchLogRepository;
 import com.search.search.infrastructure.SearchTrendKeywordRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,17 +38,12 @@ public class KakaoSearchBlogServiceImpl implements SearchOpenApiService {
     @Value("${open.kakao.URL}")
     String url;
     private final SearchLogRepository logRepository;
-    private final SearchTrendKeywordRepository trendKeywordRepository;
-
+    private final SearchEventPublisher eventPublisher;
 
     @Override
     public Page<JsonNode> requestSearchResult(String keyword, String sort, int page, int size) {
-        try {
-            SearchLog log = saveSearchLog(keyword);
-            trendKeywordRepository.updateScoreByKeyword(keyword, log.getTimestamp().toLocalDate());
-        } catch (RuntimeException e) {
-            log.error(UNABLE_TO_PROCESS.getStatus() + ": " + UNABLE_TO_PROCESS.getMessage());
-        }
+        SearchLog searchLog = saveSearchLog(keyword);
+        eventPublisher.publish(SearchEvent.of(searchLog));
 
         RestTemplate rest = new RestTemplate();
         URI uri = buildSearchUri(keyword, sort, page, size);

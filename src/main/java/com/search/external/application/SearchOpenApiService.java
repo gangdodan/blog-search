@@ -1,4 +1,4 @@
-package com.search.external.service;
+package com.search.external.application;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.data.domain.Page;
