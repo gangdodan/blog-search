@@ -1,18 +1,9 @@
 package com.search.external.infrastructure.circuit;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.search.common.exception.domain.CustomException;
-import com.search.common.exception.enums.ErrorCode;
-import com.search.external.application.SearchBlogServiceImpl;
-import com.search.external.dto.KeywordSearchRequest;
 import com.search.external.infrastructure.searcher.KakaoBlogSearcher;
 import com.search.external.infrastructure.searcher.NaverBlogSearcher;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.function.Supplier;
 
 @Slf4j
@@ -20,8 +11,7 @@ public class CircuitBreaker<T> {
     private static final int MAX_RETRIES = 3;
     private static final long RETRY_DELAY_MS = 1000;
     private static final int FAILURE_THRESHOLD = 2;
-//    private static final String API_KAKAO = "kakao";
-//    private static final String API_NAVER = "naver";
+
 
     private final KakaoBlogSearcher kakaoBlogSearcher;
     private final NaverBlogSearcher naverBlogSearcher;
