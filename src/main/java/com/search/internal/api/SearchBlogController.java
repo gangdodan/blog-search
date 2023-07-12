@@ -3,6 +3,7 @@ package com.search.internal.api;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.search.common.dto.PageResponseDto;
 import com.search.external.application.SearchOpenApiService;
+import com.search.external.dto.KeywordSearchRequest;
 import com.search.internal.application.SearchTrendKeywordService;
 import com.search.search.dto.TrendKeyword;
 import lombok.RequiredArgsConstructor;

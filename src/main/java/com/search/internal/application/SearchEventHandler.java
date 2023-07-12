@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.util.ClassUtils;
 
 import static com.search.common.exception.enums.ErrorCode.UNABLE_TO_PROCESS;
@@ -22,7 +23,7 @@ import static com.search.common.exception.enums.ErrorCode.UNABLE_TO_PROCESS;
 public class SearchEventHandler {
     private final SearchTrendKeywordRepository trendKeywordRepository;
 
-    @EventListener
+    @TransactionalEventListener
     public void handle(SearchEvent event) {
         try{
             log.info("Receive {}: [event= {}]", ClassUtils.getShortName(event.getClass()),event);
