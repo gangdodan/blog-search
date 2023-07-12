@@ -3,6 +3,7 @@ package com.search.external.infrastructure.searcher;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.search.external.dto.KeywordSearchRequest;
+import com.search.external.infrastructure.client.KakaoApiSpec;
 import com.search.search.domain.SearchLog;
 import com.search.search.event.SearchEvent;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.*;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.yaml.snakeyaml.util.UriEncoder;
@@ -23,7 +25,8 @@ import static com.search.common.exception.enums.ErrorCode.REQUEST_CONFLICT;
 import static com.search.common.exception.enums.ErrorCode.UNABLE_TO_PROCESS;
 
 @Slf4j
-public class KakaoBlogSearcher {
+@Component
+public class KakaoBlogSearcher implements KakaoApiSpec {
     @Value("${open.kakao.REST_API_KEY}")
     String secretKey;
 
@@ -31,6 +34,7 @@ public class KakaoBlogSearcher {
     String url;
 
 
+    @Override
     public Page<JsonNode> search(KeywordSearchRequest request) {
         RestTemplate rest = new RestTemplate();
         URI uri = buildSearchUri(request);

@@ -37,7 +37,6 @@ public class SearchBlogServiceImpl implements SearchOpenApiService{
 
     private final SearchLogRepository logRepository;
     private final SearchEventPublisher eventPublisher;
-    private final CircuitBreaker circuitBreaker;
     private final KakaoBlogSearcher kakaoBlogSearcher;
 
 
@@ -52,7 +51,7 @@ public class SearchBlogServiceImpl implements SearchOpenApiService{
                 .page(page)
                 .size(size)
                 .build();
-        return circuitBreaker.executeWithRetry(request);
+        return kakaoBlogSearcher.search(request);
 //        return circuitBreaker.executeWithRetry(() -> kakaoBlogSearcher.search(request));
     }
 

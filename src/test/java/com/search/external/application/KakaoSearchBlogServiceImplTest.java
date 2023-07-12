@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 
 public class KakaoSearchBlogServiceImplTest {
     @InjectMocks
-    private KakaoSearchBlogServiceImpl searchService;
+    private SearchBlogServiceImpl searchService;
     @Mock
     private SearchLogRepository logRepository;
     @Mock

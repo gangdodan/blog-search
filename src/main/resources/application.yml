@@ -39,7 +39,7 @@ logging:
     org.hibernate.sql: debug
     org.hibernate.type: trace
   slack:
-    webhook-uri: WEBHOOK_URI  #수신을 원하는 uri
+    webhook-uri: https://hooks.slack.com/services/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  #수신을 원하는 uri
   config: classpath:logback-spring.xml
 server:
   servlet:
@@ -49,4 +49,7 @@ server:
 open:
   kakao:
     URL: https://dapi.kakao.com/v2/search/blog
-    REST_API_KEY: API_KEY #발급받은 키
+    REST_API_KEY: 168f49791c65ed92825014082de464c4 #발급받은 키
+  naver:
+    URL: https://dapi.kakao.com/v2/search/blog
+    REST_API_KEY: 168f49791c65ed92825014082de464c4 #발급받은 키

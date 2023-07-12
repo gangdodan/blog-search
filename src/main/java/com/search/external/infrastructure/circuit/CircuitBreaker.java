@@ -13,9 +13,10 @@ import org.springframework.data.domain.Page;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.function.Supplier;
 
 @Slf4j
-public class CircuitBreaker {
+public class CircuitBreaker<T> {
     private static final int MAX_RETRIES = 3;
     private static final long RETRY_DELAY_MS = 1000;
     private static final int FAILURE_THRESHOLD = 2;
@@ -28,59 +29,47 @@ public class CircuitBreaker {
     private int retries;
     private boolean circuitOpen;
 
-    public CircuitBreaker(KakaoBlogSearcher kakaoBlogSearcher,NaverBlogSearcher naverBlogSearcher) {
+    public CircuitBreaker(KakaoBlogSearcher kakaoBlogSearcher, NaverBlogSearcher naverBlogSearcher) {
         this.kakaoBlogSearcher = kakaoBlogSearcher;
         this.naverBlogSearcher = naverBlogSearcher;
         this.retries = 0;
         this.circuitOpen = false;
     }
 
-    public Page<JsonNode> executeWithRetry(KeywordSearchRequest request){
+    public T executeWithRetry(Supplier<T> supplier, Supplier<T> exchangeSupplier) {
         while (retries < MAX_RETRIES) {
-
             try {
                 if (!circuitOpen) {
-                    return kakaoBlogSearcher.search(request);
-                } else {
-                    return makeFallbackApiRequest(request);
+                    return supplier.get();
                 }
             } catch (RuntimeException e) {
                 retries++;
                 if (retries >= MAX_RETRIES) {
                     handleRetryExhausted();
+                    return makeFallbackApiRequest(exchangeSupplier);
                 }
             }
         }
         return null;
     }
 
-//    private Page<JsonNode> requestApi(KeywordSearchRequest request){
-//        //api 요청 수행
-//        blogSearcher.search();
-//
-//    }
 
-    private Page<JsonNode> makeFallbackApiRequest(KeywordSearchRequest request) {
-        //대체 api 요청 수행
-        //네이버로 교체_파라미터로 바꿔야 하나? 서비스 로직을 쪼개야 하나?
-//        try {
-//            Method method = getClass().getDeclaredMethod("requestApi",String.class);
-//            method.invoke(this,vendor);
-//        } catch (Exception e) {
-//            throw new CustomException(ErrorCode.DATA_NOT_FOUND);
-//        }
-        return naverBlogSearcher.search(request);
-
-
+    private T makeFallbackApiRequest(Supplier<T> exchangeSupplier) {
+        return exchangeSupplier.get();
     }
 
-    private void handleRetryExhausted(){
+    private void handleRetryExhausted() {
         log.warn("Retries exhausted, API replaced. failureTime = {}", System.currentTimeMillis());
         if (retries >= FAILURE_THRESHOLD) {
             log.info("CircuitBreaker changed state to OPEN");
             circuitOpen = true;
+            reset();
         }
     }
 
+    private void reset() {
+        retries = 0;
+        log.info("CircuitBreaker changed state to CLOSE");
+    }
 
 }
