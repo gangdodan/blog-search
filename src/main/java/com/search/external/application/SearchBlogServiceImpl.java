@@ -16,7 +16,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -32,7 +34,6 @@ import static com.search.common.exception.enums.ErrorCode.UNABLE_TO_PROCESS;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class SearchBlogServiceImpl implements SearchOpenApiService{
 
     private final SearchLogRepository logRepository;
@@ -41,9 +42,10 @@ public class SearchBlogServiceImpl implements SearchOpenApiService{
 
 
     @Override
+    @Transactional
     public Page<JsonNode> requestSearchResult(String keyword, String sort, int page, int size) {
         SearchLog searchLog = saveSearchLog(keyword);
-        eventPublisher.publish(SearchEvent.of(searchLog));
+        publishEvent(searchLog);
 
         KeywordSearchRequest request = KeywordSearchRequest.builder()
                 .query(keyword)
@@ -54,11 +56,16 @@ public class SearchBlogServiceImpl implements SearchOpenApiService{
         return kakaoBlogSearcher.search(request);
     }
 
-
     public SearchLog saveSearchLog(String keyword) {
         return logRepository.save(SearchLog.builder()
                 .keyword(keyword)
                 .build());
+    }
+
+    @Async
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void publishEvent(SearchLog searchLog) {
+        eventPublisher.publish(SearchEvent.of(searchLog));
     }
 
 }
