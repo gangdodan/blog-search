@@ -1,6 +1,7 @@
 package com.search.external.application;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.search.external.infrastructure.searcher.KakaoBlogSearcher;
 import com.search.search.domain.SearchLog;
 import com.search.search.infrastructure.SearchLogRepository;
 import com.search.search.infrastructure.SearchTrendKeywordRepository;
@@ -19,6 +20,8 @@ import static org.mockito.Mockito.*;
 public class KakaoSearchBlogServiceImplTest {
     @InjectMocks
     private SearchBlogServiceImpl searchService;
+    @Mock
+    private KakaoBlogSearcher blogSearcher;
     @Mock
     private SearchLogRepository logRepository;
     @Mock
@@ -41,7 +44,7 @@ public class KakaoSearchBlogServiceImplTest {
 
     @Test
     void getDocumentsByPage() throws Exception {
-        Page<JsonNode> result = searchService.getDocumentsByPage(apiResponse, 1, 10);
+        Page<JsonNode> result = blogSearcher.getDocumentsByPage(apiResponse, 1, 10);
 
         assertEquals(100, result.getTotalElements());
         assertEquals(10, result.getSize());
@@ -55,7 +58,7 @@ public class KakaoSearchBlogServiceImplTest {
     @Test
     void getDocumentsByPageReturnNull() {
         apiResponse = "JSON response";
-        Page<JsonNode> result = searchService.getDocumentsByPage(apiResponse, 1, 10);
+        Page<JsonNode> result = blogSearcher.getDocumentsByPage(apiResponse, 1, 10);
 
         assertNull(result);
     }

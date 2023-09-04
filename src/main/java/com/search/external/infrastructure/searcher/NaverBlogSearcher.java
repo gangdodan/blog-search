@@ -22,10 +22,13 @@ import static com.search.common.exception.enums.ErrorCode.UNABLE_TO_PROCESS;
 
 @Slf4j
 public class NaverBlogSearcher {
-    @Value("${open.kakao.REST_API_KEY}")
+
+    @Value("${open.naver.CLIENT_ID}")
+    String clientId;
+    @Value("${open.naver.REST_API_KEY}")
     String secretKey;
 
-    @Value("${open.kakao.URL}")
+    @Value("${open.naver.URL}")
     String url;
 
 
@@ -47,9 +50,9 @@ public class NaverBlogSearcher {
     protected URI buildSearchUri(KeywordSearchRequest request) {
         return UriComponentsBuilder.fromHttpUrl(url)
                 .queryParam("query", UriEncoder.encode(request.getQuery()))
+                .queryParam("display", request.getSize())
+                .queryParam("start", request.getPage())
                 .queryParam("sort", request.getSort())
-                .queryParam("page", request.getPage())
-                .queryParam("size", request.getSize())
                 .build()
                 .toUri();
     }
@@ -57,7 +60,8 @@ public class NaverBlogSearcher {
     private HttpHeaders buildHttpHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.set("Authorization", "KakaoAK " + secretKey);
+        headers.set("X-Naver-Client-Id", clientId);
+        headers.set("X-Naver-Client-Secret", secretKey);
         return headers;
     }
 
@@ -66,10 +70,10 @@ public class NaverBlogSearcher {
             ObjectMapper objectMapper = new ObjectMapper();
 
             JsonNode responseNode = objectMapper.readTree(apiResponse);
-            JsonNode documentsNode = responseNode.get("documents");
+            JsonNode documentsNode = responseNode.get("items");
 
-            int totalCount = responseNode.get("meta").get("total_count").asInt();
-            int pageableCount = responseNode.get("meta").get("pageable_count").asInt();
+            int totalCount = responseNode.get("total").asInt();
+            int pageableCount = responseNode.get("start").asInt();
 
             int startIndex = (page - 1) * size;
             int endIndex = Math.min(startIndex + size, pageableCount);

@@ -3,8 +3,9 @@ package com.search.external.dto;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
+
 @Getter
+@Builder
 public class KeywordSearchRequest {
     private final String query;
     private final String sort;

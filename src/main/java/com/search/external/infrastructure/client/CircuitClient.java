@@ -11,10 +11,9 @@ public class CircuitClient extends CircuitBreaker<Page<JsonNode>> {
     private final KakaoBlogSearcher kakaoBlogSearcher;
     private final NaverBlogSearcher naverBlogSearcher;
 
-    public CircuitClient(KakaoBlogSearcher kakaoBlogSearcher, NaverBlogSearcher naverBlogSearcher, NaverBlogSearcher naverBlogSearcher1) {
-        super(kakaoBlogSearcher, naverBlogSearcher);
+    public CircuitClient(KakaoBlogSearcher kakaoBlogSearcher, NaverBlogSearcher naverBlogSearcher) {
         this.kakaoBlogSearcher = kakaoBlogSearcher;
-        this.naverBlogSearcher = naverBlogSearcher1;
+        this.naverBlogSearcher = naverBlogSearcher;
     }
 
 

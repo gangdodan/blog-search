@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class ExceptionLogAspect {
     private final Logger logger = LoggerFactory.getLogger(ExceptionLogAspect.class);
 
-    @AfterThrowing(pointcut = "within(com.example.*)", throwing = "exception")
+    @AfterThrowing(pointcut = "within(com.*)", throwing = "exception")
     public void logException(JoinPoint joinPoint, Throwable exception) throws Throwable {
         String className = joinPoint.getSignature().getDeclaringTypeName();
         String methodName = joinPoint.getSignature().getName();

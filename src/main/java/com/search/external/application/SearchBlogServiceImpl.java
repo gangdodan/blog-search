@@ -52,7 +52,6 @@ public class SearchBlogServiceImpl implements SearchOpenApiService{
                 .size(size)
                 .build();
         return kakaoBlogSearcher.search(request);
-//        return circuitBreaker.executeWithRetry(() -> kakaoBlogSearcher.search(request));
     }
 
 

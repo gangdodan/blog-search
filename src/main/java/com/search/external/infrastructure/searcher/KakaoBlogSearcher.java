@@ -3,9 +3,7 @@ package com.search.external.infrastructure.searcher;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.search.external.dto.KeywordSearchRequest;
-import com.search.external.infrastructure.client.KakaoApiSpec;
-import com.search.search.domain.SearchLog;
-import com.search.search.event.SearchEvent;
+import com.search.external.infrastructure.client.OpenApiSpec;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -26,7 +24,7 @@ import static com.search.common.exception.enums.ErrorCode.UNABLE_TO_PROCESS;
 
 @Slf4j
 @Component
-public class KakaoBlogSearcher implements KakaoApiSpec {
+public class KakaoBlogSearcher implements OpenApiSpec {
     @Value("${open.kakao.REST_API_KEY}")
     String secretKey;
 
@@ -50,7 +48,8 @@ public class KakaoBlogSearcher implements KakaoApiSpec {
         }
     }
 
-    protected URI buildSearchUri(KeywordSearchRequest request) {
+    @Override
+    public URI buildSearchUri(KeywordSearchRequest request) {
         return UriComponentsBuilder.fromHttpUrl(url)
                 .queryParam("query", UriEncoder.encode(request.getQuery()))
                 .queryParam("sort", request.getSort())
@@ -60,7 +59,7 @@ public class KakaoBlogSearcher implements KakaoApiSpec {
                 .toUri();
     }
 
-    private HttpHeaders buildHttpHeaders() {
+    public HttpHeaders buildHttpHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.set("Authorization", "KakaoAK " + secretKey);
