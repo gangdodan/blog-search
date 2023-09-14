@@ -54,7 +54,4 @@
   - 로그 파일과 별개로 Exception 로그를 slack으로 실시간 push 받을 수 있도록 webhook 설정 
   - 클라이언트가 일관된 에러 정보를 받아볼 수 있도록 ExceptionHandler작성
 
-### 미구현
-- 동시성 이슈 대응
-
 
