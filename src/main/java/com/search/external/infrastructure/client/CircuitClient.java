@@ -6,7 +6,9 @@ import com.search.external.infrastructure.circuit.CircuitBreaker;
 import com.search.external.infrastructure.searcher.KakaoBlogSearcher;
 import com.search.external.infrastructure.searcher.NaverBlogSearcher;
 import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CircuitClient extends CircuitBreaker<Page<JsonNode>> {
     private final KakaoBlogSearcher kakaoBlogSearcher;
     private final NaverBlogSearcher naverBlogSearcher;
@@ -20,6 +22,4 @@ public class CircuitClient extends CircuitBreaker<Page<JsonNode>> {
     public Page<JsonNode> search(KeywordSearchRequest request) {
         return executeWithRetry(() -> kakaoBlogSearcher.search(request), () -> naverBlogSearcher.search(request));
     }
-
-
 }

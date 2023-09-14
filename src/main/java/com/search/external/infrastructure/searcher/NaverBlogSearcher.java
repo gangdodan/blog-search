@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.*;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.yaml.snakeyaml.util.UriEncoder;
@@ -21,6 +22,7 @@ import static com.search.common.exception.enums.ErrorCode.REQUEST_CONFLICT;
 import static com.search.common.exception.enums.ErrorCode.UNABLE_TO_PROCESS;
 
 @Slf4j
+@Component
 public class NaverBlogSearcher {
 
     @Value("${open.naver.CLIENT_ID}")
